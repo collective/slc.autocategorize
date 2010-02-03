@@ -1,16 +1,13 @@
-from zope import event
 from zope.interface import implements
 
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
-from archetypes.schemaextender.interfaces import ISchemaModifier
 from archetypes.schemaextender.field import ExtensionField
 
 from Products.Archetypes import atapi
 from Products.CMFPlone import PloneMessageFactory as _
 
 from interfaces import IAutocategorizeLayer
-from events import SubjectEditedEvent
 
 class ExtendedBooleanField(ExtensionField, atapi.BooleanField):
     """ """

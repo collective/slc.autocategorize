@@ -20,24 +20,10 @@
         provides="archetypes.schemaextender.interfaces.IOrderableSchemaExtender"
         />
 
-    <adapter
-        name="slc.autocategorize.schemaextender"
-        for="Products.Archetypes.interfaces.IBaseFolder"
-        factory=".schemaextender.FolderModifier" 
-        provides="archetypes.schemaextender.interfaces.ISchemaModifier"
-        />
-
     <subscriber 
         for="Products.Archetypes.interfaces.IBaseObject
              Products.Archetypes.interfaces.IObjectInitializedEvent"
         handler=".events.autocategorize"
         />
-
-    <subscriber 
-        for="Products.Archetypes.interfaces.IBaseFolder
-             .interfaces.ISubjectEditedEvent"
-        handler=".events.recategorize"
-        />
-        
 
 </configure>

@@ -1,19 +1,7 @@
 import logging
-from zope import interface
-
-try:
-    from zope.component.interfaces import ObjectEvent
-except ImportError:
-    # Legacy Zope 3.2 support
-    from zope.app.event.objectevent import ObjectEvent
-
-from interfaces import ISubjectEditedEvent
 
 log = logging.getLogger('slc.autocategorize/events.py')
 
-class SubjectEditedEvent(ObjectEvent):
-    interface.implements(ISubjectEditedEvent)
- 
 def autocategorize(obj, event):
     """ Event handler registered for object adding
     """
