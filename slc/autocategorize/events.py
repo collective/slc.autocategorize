@@ -9,7 +9,7 @@ def autocategorize(obj, event):
     folders = []
     parent = obj.aq_parent
     while parent.meta_type != 'Plone Site':
-        if parent.Schema().get('autoCategorizeContent').get(parent):
+        if parent.Schema().get('autoCategorizeContent'):
             autocategorize = True
             folders.append(parent)
         parent = parent.aq_parent
