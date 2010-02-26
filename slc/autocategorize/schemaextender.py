@@ -47,11 +47,18 @@ class SchemaExtender(object):
         return self._fields
 
     def getOrder(self, original):
-        ls = original['categorization']
-        ls.remove('autoCategorizeContent')
-        ls.insert(ls.index('subject')+1, 'autoCategorizeContent')
-        original['categorization'] = ls
-        return original
+        for fieldset in original.keys():
+            if "subject" in original[fieldset]:
+                ls = original[fieldset]
 
+                if 'categorization' in ls:
+                    ls.remove('autoCategorizeContent')
+                else:
+                    for fs in original.keys():
+                        if "autoCategorizeContent" in original[fs]:
+                            original[fs].remove("autoCategorizeContent")
 
+                ls.insert(ls.index('subject')+1, 'autoCategorizeContent')
+                original[fieldset] = ls
+                return original
 
