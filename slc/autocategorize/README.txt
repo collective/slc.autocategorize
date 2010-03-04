@@ -51,7 +51,6 @@ been given the same 'subject' values:
 
     >>> folder.invokeFactory('Document', 'document1')
     'document1'
-
     >>> d1 = folder.get('document1')
 
 Normally, when you created an Archetypes object in Plone, the
@@ -99,26 +98,23 @@ Finally, we test the 'recursive autocategorіzation' feature works:
 
     >>> folder.invokeFactory('Folder', 'sub-folder')
     'sub-folder'
-
+    >>>
     >>> subfolder = folder.get('sub-folder')
-
     >>> subfolder.invokeFactory('Folder', 'document3')
     'document3'
-
+    >>>
     >>> d3 = subfolder.get('document3')
     >>> event.notify(ObjectInitializedEvent(d3))
-
+    >>>
     >>> d3.Subject()
     ()
-
     >>> folder.Schema().get('recursiveAutoCategorization').set(folder, True)
-
+    >>>
     >>> subfolder.invokeFactory('Folder', 'document4')
     'document4'
-
     >>> d4 = subfolder.get('document4')
     >>> event.notify(ObjectInitializedEvent(d4))
-
+    >>>
     >>> d4.Subject()
     ('foo', 'bar', 'baz')
 
