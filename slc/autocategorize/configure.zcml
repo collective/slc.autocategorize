@@ -13,6 +13,10 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <!-- You can override this adapter by registering a new one with the
+         same name. That way, you can restrict the types of folders that might 
+         have the option of auto-categorisation.
+    -->
     <adapter
         name="slc.autocategorize.schemaextender"
         for="Products.Archetypes.interfaces.IBaseFolder"
