@@ -5,21 +5,37 @@ log = logging.getLogger('slc.autocategorize/events.py')
 def autocategorize(obj, event):
     """ Event handler registered for object adding
     """
-    autocategorize = False
     folders = []
-    parent = obj.aq_parent
-    while parent.meta_type != 'Plone Site':
-        if parent.Schema().get('autoCategorizeContent'):
-            autocategorize = True
-            folders.append(parent)
-        parent = parent.aq_parent
+    ancestor = parent = obj.aq_parent
 
-    if autocategorize:
-        ocats = list(obj.Subject())
-        for parent in folders:
-            pcats = parent.Subject()
-            if pcats:
-                ocats = ocats + [c for c in pcats if c not in ocats]
+    while ancestor.meta_type != 'Plone Site':
+        categorize_field = ancestor.Schema().get('autoCategorizeNewContent')
+        categorize = categorize_field and categorize_field.get(ancestor)
+        if not categorize:
+            ancestor = ancestor.aq_parent
+            continue
 
-        obj.setSubject(ocats)
+        if ancestor == parent:
+            folders.append(ancestor)
+        else:
+            recurse_field = ancestor.Schema().get('recursiveAutoCategorization')
+            recurse = recurse_field and recurse_field.get(ancestor)
+            if recurse:
+                folders.append(ancestor)
+
+        ancestor = ancestor.aq_parent
+
+    if not folders:
+        return
+
+    ocats = list(obj.Subject())
+    for parent in folders:
+        pcats = parent.Subject()
+        if pcats:
+            ocats = ocats + [c for c in pcats if c not in ocats]
+
+    obj.setSubject(ocats)
+    log.info('Object %s have been autocategorized with %s' \
+                                    % (obj.Title(), str(ocats)))
+
 
