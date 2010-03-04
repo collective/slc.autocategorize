@@ -25,7 +25,7 @@ necessary*.
  
 
 How To Use (Simple DocTests):
-=======================
+=============================
 
 First we create a folder whose children we want to be categorized
 automatically:
