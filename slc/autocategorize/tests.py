@@ -1,14 +1,12 @@
 import unittest
-
-from zope.testing import doctestunit
-from zope.component import testing
+import interlude
+import zope.testing
 from Testing import ZopeTestCase as ztc
-
 from Products.Five import zcml
 from Products.Five import fiveconfigure
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import PloneSite
-ptc.setupPloneSite()
+ptc.setupPloneSite(extension_profiles=['slc.autocategorize:default'],)
 
 import slc.autocategorize
 
@@ -25,30 +23,22 @@ class TestCase(ptc.PloneTestCase):
         def tearDown(cls):
             pass
 
+optionflags = (zope.testing.doctest.REPORT_ONLY_FIRST_FAILURE |
+               zope.testing.doctest.ELLIPSIS | 
+               zope.testing.doctest.NORMALIZE_WHITESPACE
+               )
 
 def test_suite():
     return unittest.TestSuite([
-
-        # Unit tests
-        #doctestunit.DocFileSuite(
-        #    'README.txt', package='slc.autocategorize',
-        #    setUp=testing.setUp, tearDown=testing.tearDown),
-
-        #doctestunit.DocTestSuite(
-        #    module='slc.autocategorize.mymodule',
-        #    setUp=testing.setUp, tearDown=testing.tearDown),
-
-
-        # Integration tests that use PloneTestCase
-        #ztc.ZopeDocFileSuite(
-        #    'README.txt', package='slc.autocategorize',
-        #    test_class=TestCase),
-
-        #ztc.FunctionalDocFileSuite(
-        #    'browser.txt', package='slc.autocategorize',
-        #    test_class=TestCase),
-
+        ztc.FunctionalDocFileSuite(
+            'README.txt', 
+            package='slc.autocategorize',
+            test_class=TestCase, 
+            globs=dict(interact=interlude.interact),
+            optionflags=optionflags
+            ),
         ])
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
+
