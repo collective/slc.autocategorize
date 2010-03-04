@@ -22,22 +22,45 @@ class SchemaExtender(object):
         self.context = context
 
     _fields = [
-            ExtendedBooleanField('autoCategorizeContent',
+            ExtendedBooleanField('autoCategorizeNewContent',
                 schemata='categorization',
                 languageIndependent=True,
-                accessor='getAutoCategorizeContent',
+                accessor='autoCategorizeNewContent',
                 widget=atapi.BooleanWidget(
                     visible={'edit': 'visible', 'view': 'invisible'},
                     label = _(
-                        u'label_auto_categorize_content', 
+                        u'label_auto_categorize_new_content', 
                         default=u'Automatically categorize content newly '
                         'created inside this folder?',
                     ),
                     description=_(
-                        u'description_auto_categorize_content', 
+                        u'description_auto_categorize_new_content', 
                         default=u"Select this option if you want  "
                         "content created inside this folder to automatically "
                         "acquire the same categories. "
+                    ),
+                ),
+            ),
+            ExtendedBooleanField('recursiveAutoCategorization',
+                schemata='categorization',
+                languageIndependent=True,
+                accessor='recursiveAutoCategorization',
+                widget=atapi.BooleanWidget(
+                    visible={'edit': 'visible', 'view': 'invisible'},
+                    label = _(
+                        u'label_recursive_autocategorization', 
+                        default=u'Apply the automatic categorization '
+                        'recursively.'
+                    ),
+                    description=_(
+                        u'description_recursive_autocategorization', 
+                        default=u"Select this option if you want  "
+                        "the objects created inside subfolders of this folder "
+                        " to also receive these categories. <br/>"
+                        "NOTE: This option is only applicable if the previous "
+                        "checkbox is enabled. <br/>"
+                        "IMPORTANT: Be aware that this option can considerably "
+                        "increase the amount of time it takes to add objects!"
                     ),
                 ),
             ),
@@ -47,18 +70,18 @@ class SchemaExtender(object):
         return self._fields
 
     def getOrder(self, original):
-        for fieldset in original.keys():
-            if "subject" in original[fieldset]:
-                ls = original[fieldset]
+        for fs in original.keys():
+            if "autoCategorizeNewContent" in original[fs]:
+                original[fs].remove("autoCategorizeNewContent")
 
-                if 'categorization' in ls:
-                    ls.remove('autoCategorizeContent')
-                else:
-                    for fs in original.keys():
-                        if "autoCategorizeContent" in original[fs]:
-                            original[fs].remove("autoCategorizeContent")
+            if "recursiveAutoCategorization" in original[fs]:
+                original[fs].remove("recursiveAutoCategorization")
+        
+            if "subject" in original[fs]:
+                ls = original[fs]
+                ls.insert(ls.index('subject')+1, 'autoCategorizeNewContent')
+                ls.insert(ls.index('subject')+2, 'recursiveAutoCategorization')
+                original[fs] = ls
 
-                ls.insert(ls.index('subject')+1, 'autoCategorizeContent')
-                original[fieldset] = ls
-                return original
+        return original
 
