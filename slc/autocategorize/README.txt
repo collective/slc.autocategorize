@@ -94,27 +94,39 @@ Let's test that the categories are as expected:
     >>> d2.Subject()
     ('baz', 'buz', 'foo', 'bar')
 
-Finally, we test the 'recursive autocategorіzation' feature works:
+Finally, we test that the 'recursive autocategorіzation' feature works.
+First we create a subfolder and inside that folder another document:
 
     >>> folder.invokeFactory('Folder', 'sub-folder')
     'sub-folder'
-    >>>
     >>> subfolder = folder.get('sub-folder')
     >>> subfolder.invokeFactory('Folder', 'document3')
     'document3'
-    >>>
+
+Again we have to call the appropriate event:
+
     >>> d3 = subfolder.get('document3')
     >>> event.notify(ObjectInitializedEvent(d3))
-    >>>
+
+And now we make sure that now categories were set yet, since the recurse
+feature was not yet activated:
+
     >>> d3.Subject()
     ()
+
+Ok, so let's now activate recursion:
+
     >>> folder.Schema().get('recursiveAutoCategorization').set(folder, True)
-    >>>
+
+Then we create a new document:
+
     >>> subfolder.invokeFactory('Folder', 'document4')
     'document4'
     >>> d4 = subfolder.get('document4')
     >>> event.notify(ObjectInitializedEvent(d4))
-    >>>
+
+and test that the categories were set correctly:
+
     >>> d4.Subject()
     ('foo', 'bar', 'baz')
 
