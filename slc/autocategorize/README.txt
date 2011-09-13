@@ -21,9 +21,8 @@ to the BaseFolder schema via a schema-extender adapter. You can override this
 adapter in your own product to be applicable to another Archetype class if
 necessary*. 
 
-*See slc.autocategorize.configure.py
+*See slc.autocategorize.configure.py*
  
-
 How To Use (Simple DocTests):
 =============================
 
