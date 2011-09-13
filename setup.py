@@ -3,10 +3,6 @@ import os
 
 version = '0.1b1'
 
-tests_require=[
-        'interlude',
-        ]
-
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
@@ -37,6 +33,9 @@ setup(
     namespace_packages=['slc'],
     include_package_data=True,
     zip_safe=False,
+    extras_require={
+    'test': 'interlude',
+    },
     install_requires=[
         'setuptools',
         'Products.CMFPlone',
