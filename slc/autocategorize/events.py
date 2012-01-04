@@ -1,4 +1,5 @@
 import logging
+from Products.Archetypes.utils import shasattr
 
 log = logging.getLogger('slc.autocategorize/events.py')
 
@@ -9,6 +10,11 @@ def autocategorize(obj, event):
     ancestor = parent = obj.aq_parent
 
     while ancestor.meta_type != 'Plone Site':
+        if not shasattr(ancestor, 'Schema'):
+            # TODO: We cannot yet deal with Dexterity content types
+            ancestor = ancestor.aq_parent
+            continue
+
         categorize_field = ancestor.Schema().get('autoCategorizeNewContent')
         categorize = categorize_field and categorize_field.get(ancestor)
         if not categorize:
